@@ -1,0 +1,1 @@
+export const COOKIE_USER= 'data-user-note'
