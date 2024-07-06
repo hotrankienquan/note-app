@@ -51,3 +51,7 @@ export interface IQueryListPost extends IMemento<IQueryAddPost> {
   memento: IQueryAddPost | undefined;
   offset: number;
 }
+export interface IQueryRegister extends IMemento<IQueryRegister>{
+  errorMessage:string;
+  memento: IQueryAddPost | undefined;
+}

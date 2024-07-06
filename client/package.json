@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.6.0",
-    "@preact/signals": "^1.2.3",
     "axios": "^1.7.2",
     "classnames": "^2.5.1",
     "jodit-react": "^4.1.2",

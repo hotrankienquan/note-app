@@ -1,4 +1,4 @@
-import { IQueryAddPost, IQueryListPost } from "../interface/common";
+import { IQueryAddPost, IQueryListPost, IQueryRegister } from "../interface/common";
 
 export class QueryAddPost implements IQueryAddPost {
     errorMessage: string;
@@ -17,5 +17,14 @@ export class QueryListPost implements IQueryListPost {
         this.errorMessage = values?.errorMessage ?? '';
         this.memento = undefined;
         this.offset = values?.offset ?? 0;
+    }
+}
+
+export class QueryRegister implements IQueryRegister {
+    errorMessage: string;
+    memento: IQueryAddPost | undefined;
+    constructor(values?: Partial<IQueryRegister>){
+        this.errorMessage = values?.errorMessage ?? "";
+        this.memento = undefined;
     }
 }

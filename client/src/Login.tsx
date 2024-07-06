@@ -3,25 +3,22 @@ import { Link, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { http } from "./http/make-request";
-import { signal } from "@preact/signals";
 import { IApiResponse, IResLogin } from "./interface/request.type";
 import classNames from "classnames";
 import axios, { AxiosError } from "axios";
 import { loginSchema } from "./schema/schema-validate-form";
-import { IDataRegister, ILogin } from "./interface/common";
+import { ILogin, IQueryRegister } from "./interface/common";
 import { cookiesBrowser } from "./cookie/cookie-browser";
 import { COOKIE_USER } from "./constants/common";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { QueryRegister } from "./utils/class";
 
-
-const registerSignal = signal<IDataRegister>({
-  errorMessage:"",
-  memento: undefined,
-  data: null
-});
 
 
 const LoginPage = () => {
+
+  const [query, setQuery] = useState<IQueryRegister>(new QueryRegister())
+
   const {
     register,
     handleSubmit,
@@ -32,35 +29,23 @@ const LoginPage = () => {
   });
   const navigate = useNavigate()
   const onSubmit: SubmitHandler<ILogin> = async (data) => {
-    registerSignal.value =  {
-      ...registerSignal.value,
-      memento: registerSignal.value
-    }
+
     try {
       const result = await http.post<ILogin, IApiResponse<IResLogin>>("/login", {
         ...data,
       });
-      if(result.status !== 200){
+      if (result.status !== 201) {
         //failed
-        registerSignal.value =  {
-          ...registerSignal.value,
-          memento: registerSignal.value,
-          errorMessage: result.message ?? "some error occured"
-        }
+        throw new Error("failed")
       }
       //succeed
-      registerSignal.value =  {
-        ...registerSignal.value,
-        memento: undefined,
-        errorMessage: result.message,
-        data: result?.metadata
-      }
-      
+      setQuery(prev => ({ ...prev, memento: undefined }))
       cookiesBrowser.set(COOKIE_USER, JSON.stringify(result?.metadata))
       reset({
-        email:"",
-        password:"",
+        email: "",
+        password: "",
       })
+      
       navigate("/")
     } catch (error) { /* empty */
       const errors = error as AxiosError<{
@@ -69,22 +54,21 @@ const LoginPage = () => {
         stack: string;
         status: string;
       }>;
-      if(!axios.isAxiosError(error)){
+      if (!axios.isAxiosError(error)) {
         // do whatever you want with native error
         console.log('native error', errors);
-        
+
       }
       console.log("your error", errors?.response?.data?.message);
-      registerSignal.value.errorMessage = errors?.response?.data?.message;
-      registerSignal.value.memento = undefined;
+      setQuery(prev => ({ ...prev, memento: prev.memento, errorMessage: errors?.response?.data?.message ?? "" }))
       // do what you want with your axios error
-     }
+    }
   };
-  useEffect(()=>{
-    if(cookiesBrowser.get(COOKIE_USER)){
+  useEffect(() => {
+    if (cookiesBrowser.get(COOKIE_USER)) {
       window.location.href = '/'
     }
-  },[])
+  }, [])
   return (
     <div className="font-sans antialiased bg-grey-lightest">
       <div className="w-full bg-green fixed shadow z-1">
@@ -137,17 +121,17 @@ const LoginPage = () => {
                 <div>
                   {errors.email && <span>{errors.email.message}</span>}
                   {errors.password && <span>{errors.password.message}</span>}
-                  {registerSignal.value.errorMessage && <span>{registerSignal.value.errorMessage}</span>}
+                  {query.errorMessage && <span>{query.errorMessage}</span>}
                 </div>
                 <div className="flex items-center justify-between mt-8">
                   <button
-                    disabled={!!registerSignal.value.memento}
-                    className={classNames("mx-auto border-[1px] border-[#ccc] border-solid opacity-100 hover:opacity-70 cursor-pointer text-[#333] font-bold py-2 px-4 rounded-sm",{
-                      "bg-gray-200": Boolean(registerSignal.value.memento)
+                    disabled={!!query.memento}
+                    className={classNames("mx-auto border-[1px] border-[#ccc] border-solid opacity-100 hover:opacity-70 cursor-pointer text-[#333] font-bold py-2 px-4 rounded-sm", {
+                      "bg-gray-200": Boolean(query.memento)
                     })}
                     type="submit"
                   >
-                    {(registerSignal.value.memento) ? "loading..." : "Let'sgo"}
+                    {(query.memento) ? "loading..." : "Let'sgo"}
                   </button>
                 </div>
               </div>
