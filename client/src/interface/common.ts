@@ -38,5 +38,16 @@ export interface ILogin {
 }
 export interface IAddPost {
   title: string;
-  content: string;
+}
+
+
+export interface IQueryAddPost extends IMemento<IQueryAddPost> {
+  errorMessage:string;
+  memento: IQueryAddPost | undefined
+}
+
+export interface IQueryListPost extends IMemento<IQueryAddPost> {
+  errorMessage:string;
+  memento: IQueryAddPost | undefined;
+  offset: number;
 }

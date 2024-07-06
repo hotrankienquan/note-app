@@ -70,7 +70,7 @@ module.exports = (app) => {
     validateRequest,
     asyncHandler(userController.addNote)
   );
-
+  router.post("/edit-note",validateAddNote(), validateRequest, asyncHandler(userController.editNote))
   router.get("/get-note-of-user", asyncHandler(userController.getNoteOfUser))
 
   router.get("/get-all-note-by-admin", isAdmin, asyncHandler(userController.getAllNoteByAdmin))

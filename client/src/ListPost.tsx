@@ -1,107 +1,47 @@
-import { IApiResponse } from "./interface/request.type";
-import { IListPost, INoteUser } from "./interface/common";
-import { http } from "./http/make-request";
-import { cookiesBrowser } from "./cookie/cookie-browser";
-import { COOKIE_USER } from "./constants/common";
-import { useEffect, useState } from "react";
-const LIMIT = 10;
+import { useStorePost } from "./AddPost";
+import { useGetListPost } from "./hooks/useGetListPost";
+import { SinglePost } from "./SinglePost";
+
+interface IDataPassToSinglePost {
+  id: number;
+  title: string;
+  content: string;
+}
 function ListPost() {
-  const [currentPost, setCurrentPost] = useState<IListPost>({
-    data: null,
-    errorMessage: "",
-    memento: undefined,
-    offset: 0,
-  });
-  
-  useEffect(() => {
-    async function getData() {
-      try {
-        setCurrentPost((prev) => ({
-          ...prev,
-          memento: {
-            data: null,
-            errorMessage: "",
-            memento: undefined,
-            offset: 0
-          },
-        }));
-        const response = await http.get<
-          Record<string, never>,
-          IApiResponse<INoteUser>
-        >("/get-note-of-user", {
-          headers: {
-            "x-client-id": cookiesBrowser.get(COOKIE_USER)?.user?.id,
-            "x-atoken-id": cookiesBrowser.get(COOKIE_USER)?.tokens?.accesstoken,
-          },
-          params: {
-            limit: LIMIT,
-            offset: currentPost.offset,
-          },
-        });
-        if (response.status !== 200) {
-          setCurrentPost((prev) => ({
-            ...prev,
-            errorMessage: response.message,
-            memento: undefined,
-          }));
-        }
-        setCurrentPost((prev) => ({
-          ...prev,
-          data: response.metadata,
-          errorMessage: response.message,
-          memento: undefined,
-        }));
-      } catch (error) {
-        setCurrentPost((prev) => ({ ...prev, memento: undefined }));
-      }
-    }
-    getData();
-  }, [currentPost.offset]);
-  function handleNext() {
-    if(currentPost.data?.data?.length === 0){
+  const { dataPost } = useStorePost();
+  const { dataSource, query, setQuery } = useGetListPost()
+  function handlePrev() {
+    if (query.offset <= 0) {
       return;
     }
-    setCurrentPost((prev) => ({
-      ...prev,
-      offset:currentPost.offset + 1,
-    }));
+    setQuery(prev => ({ ...prev, offset: prev.offset - 1 }))
   }
-  function handleBack() {
-    if(currentPost.offset === 0){
+  function handleNext() {
+    if (dataSource?.data?.length === 0) {
       return;
     }
-    setCurrentPost((prev) => ({
-      ...prev,
-      offset:currentPost.offset - 1,
-    }));
+    setQuery(prev => ({ ...prev, offset: prev.offset + 1 }))
   }
   return (
     <>
-      {currentPost.memento ? (
+      {dataPost && Array.isArray(dataPost) && dataPost.map((data: IDataPassToSinglePost) =>
+       <SinglePost
+       key={data.id}
+        {...data}
+      />)
+      }
+      {query.memento ? (
         <p>Loading...</p>
       ) : (
-        currentPost?.data &&
-        currentPost?.data?.data &&
-        currentPost?.data?.data.map((item) => {
-          return (
-            <div key={item.id} className="p-2 m-2 border-b-2 border-solid min-h-[200px]">
-              <p>Title: {item.title}</p>
-              <p>Content: {item.content}</p>
-            </div>
-          );
-        })
+        Array.isArray(dataSource?.data) && dataSource?.data.map((data: IDataPassToSinglePost) => 
+        <SinglePost
+          key={data.id}
+          {...data}
+        />)
       )}
-      <div className="flex items-center justify-between">
-        {currentPost.offset === 0 && currentPost.data && currentPost.data?.countRecord <= LIMIT ? (
-          <></>
-        ) : (
-          <button onClick={handleBack}>Previous post</button>
-        )}
-        
-
-          <button onClick={handleNext}>Next post</button>
-         
-        
+      <div className="">
+        {query.offset > 0 && <button className="float-left" onClick={handlePrev}>bài trước</button>}
+        <button className="float-right" onClick={handleNext}>bài sau</button>
       </div>
     </>
   );

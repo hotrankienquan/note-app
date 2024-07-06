@@ -2,7 +2,7 @@ import * as yup from "yup";
 const registerSchema = yup
   .object({
     username: yup.string().max(20).required(),
-    email: yup.string().max(20).email().required(),
+    email: yup.string().email().required(),
     password: yup.string().max(20).min(6).required(),
   })
   .required();
@@ -16,7 +16,6 @@ const registerSchema = yup
   const addPostSchema = yup
   .object({
     title: yup.string().max(20).required(),
-    content: yup.string().max(2000).min(6).required(),
   })
   .required();
 export {

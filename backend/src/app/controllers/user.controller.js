@@ -65,6 +65,12 @@ class AccessController {
             metadata: await AccessService.getAllNoteByAdmin()
         }).send(res)
     }
+    editNote = async(req, res) => {
+        new OK({
+            message:"Chỉnh sửa bài viết thành công",
+            metadata: await AccessService.editNote({payloadEdit: req.body,authenInfo: req.keyStore})
+        }).send(res)
+    }
 }
 
 module.exports = new AccessController();

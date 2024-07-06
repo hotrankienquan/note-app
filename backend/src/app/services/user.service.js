@@ -21,6 +21,22 @@ const { convertToRealDateTime } = require("../../utils/formatDate");
 const log = require("node-file-logger");
 
 class AccessService {
+  static editNote = async({payloadEdit, authenInfo}) => {
+    
+    if(!payloadEdit){
+      throw new Error("khong co data from client")
+    }
+
+    const note = await Note.findOne({ where: { userId: authenInfo.userId } });
+    
+    if(!note){
+      throw new Error("khong tim thay bai viet")
+    }
+    await note.update(payloadEdit);
+    console.log('Note updated successfully', note);
+    return note;
+    
+  }
   static getAllNoteByAdmin = async () => {
     const data = await Note.findAll({
       include: [
@@ -197,7 +213,7 @@ class AccessService {
     if (!keyStore) {
       throw new BadRequestError("error key store");
     }
-    log.Info("login succeed" + JSON.stringify(user))
+    log.Info("login succeed" + JSON.stringify(finallyResult))
     return {
       user: finallyResult,
       tokens,

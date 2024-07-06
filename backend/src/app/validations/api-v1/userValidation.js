@@ -35,8 +35,8 @@ const validateAddNote = () => {
   return [
     body("title")
     .notEmpty()
-    .isLength({min:3, max:20})
-    .withMessage("tieu de co min la 3, max la 20 ki tu")
+    .isLength({min:3, max:200})
+    .withMessage("tieu de co min la 3, max la 200 ki tu")
     .exists()
     .isString()
     .custom((value) => {
@@ -47,8 +47,6 @@ const validateAddNote = () => {
     }),
     body("content")
     .notEmpty()
-    .isLength({min:3, max:1000})
-    .withMessage("tieu de co min la 3, max la 1000 ki tu")
     .exists()
     .isString()
   ]

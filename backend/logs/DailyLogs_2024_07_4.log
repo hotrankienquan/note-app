@@ -1,0 +1,8 @@
+8:49:42 AM | Info | 'createOrUpdateKey succeed' | 
+8:49:56 AM | Info | 'createOrUpdateKey succeed' | 
+8:50:42 AM | Info | 'createOrUpdateKey succeed' | 
+8:50:42 AM | Info | 'register succeed{"id":"727e8e0a-8137-456a-8b2f-7287e4df746b","username":"test2","email":"test3@gmail.com","updateTimestamp":"2024-07-04T15:50:42.632Z","createdAt":"2024-07-04T15:50:42.632Z"}' | 
+8:50:42 AM | Info | 'data from first time get note of user []' | 
+8:50:42 AM | Info | 'data from first time get note of user []' | 
+8:51:18 AM | Info | 'data from first time get note of user []' | 
+8:51:18 AM | Info | 'data from first time get note of user []' | 

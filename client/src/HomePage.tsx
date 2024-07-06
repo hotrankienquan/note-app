@@ -55,6 +55,16 @@ const HomePage = () => {
         <h4>Các bài ghi chú ở đây</h4>
         <ListPost />
       </div>
+
+      <div className="p-4">
+        phiên bản v1.2
+
+        <p>chúng tôi đã cập nhật các tính năng:
+          <p>thêm bài với editor</p>
+          <p>hiển thị bài viết khi vừa thêm bài</p>
+          <p>cho phép chỉnh sửa và xóa bài viết</p>
+        </p>
+      </div>
     </div>
   );
 };

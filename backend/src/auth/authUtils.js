@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { asyncHandler } = require("../middlewares/catchAll");
 const db = require("../app/models");
-const { AuthFailureError } = require("../core/error.response");
+const { AuthFailureError, NotFoundError } = require("../core/error.response");
 const StoreKeyModel = db.storeKey;
 
 const HEADER = {
@@ -85,7 +85,6 @@ const authentication = asyncHandler(async function authenFuncV2(req, res, next) 
 
   try {
     const decodeUser = jwt.verify(at, keyStore.publicKey);
-    console.log(decodeUser);
     if (userId !== decodeUser.user) {
       throw new AuthFailureError("invalid user id");
     }
