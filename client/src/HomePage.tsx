@@ -62,7 +62,7 @@ const HomePage = () => {
         <p>chúng tôi đã cập nhật các tính năng:
           <p>thêm bài với editor</p>
           <p>hiển thị bài viết khi vừa thêm bài</p>
-          <p>cho phép chỉnh sửa và xóa bài viết</p>
+          <p>cho phép chỉnh sửa bài viết</p>
         </p>
       </div>
     </div>

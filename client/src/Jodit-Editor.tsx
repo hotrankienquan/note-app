@@ -3,11 +3,12 @@ import { useRef, useState } from "react";
 
 interface IProps {
 	getContent:(value: string) => void;
+	contentInit?: string;
 }
 
-export const Editor = ({getContent}: IProps) => {
+export const Editor = ({getContent, contentInit}: IProps) => {
 	const editor = useRef(null);
-	const [content, setContent] = useState('');
+	const [content, setContent] = useState(contentInit ?? '');
 
 
 	return (
